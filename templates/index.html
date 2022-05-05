@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create User</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel" data-type="module">
+      const Home = () => {
+        const name = React.useRef(null);
+        const email = React.useRef(null);
+        const address = React.useRef(null);
+        const [result, setResult] = React.useState(null);
+        const [error, setError] = React.useState(null);
+
+        const handleRequest = async () => {
+          event.preventDefault();
+          try {
+            const { data } = await axios.post('http://127.0.0.1:5000/newuser', {
+              name: name.current.value,
+              email: email.current.value,
+              address: address.current.value,
+            });
+            console.log(data);
+            setResult(true);
+          } catch (error) {
+            console.log(error);
+            setError('Erro na request');
+          }
+        };
+
+        return (
+          <form onSubmit={handleRequest}>
+            <label htmlFor='name1'>Nome:</label>
+            <br />
+            <input type='text' id='name1' name='name1' ref={name} />
+            <br />
+            <label htmlFor='email1'>Email:</label>
+            <br />
+            <input type='text' id='email1' name='email1' ref={email} />
+            <br />
+            <label htmlFor='address1'>Endereço:</label><br/>
+            <input type='text' id='address1' name='address1' ref={address} />
+            <br />
+            <br />
+            <a href='/list'>
+              <p>Lista de usuários</p>
+            </a>
+            <br />
+            <button type='submit'>Enviar</button>
+            {result && <h1>Usuário cadastrado com sucesso.</h1>}
+            {error && <h1>Ocorreu um erro na requisição. Verifique o console</h1>}
+          </form>
+        );
+      };
+      ReactDOM.render(<Home />, document.getElementById('root'));
+    </script>
+  </body>
+</html>
